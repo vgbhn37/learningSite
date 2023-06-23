@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <div th:if="${#strings.equals(result,'correct')}" class="border-bottom">
+        <h3>정답입니다!</h3>
+      </div>
+      <div th:unless="${#strings.equals(result,'correct')}" class="border-bottom">
+        <h3>틀렸습니다...</h3>
+      </div>
+      <br /><br />
+
+      정답 : <span th:text="${question.question_answer}"></span><br />
+      해설 : <span th:text="${question.question_explanation}"></span> <br /><br /><br />
+      <a
+        th:href="@{|/question/test/${question.subject_code}|}"
+        class="btn btn-sm btn-outline-secondary"
+        th:text="다음"
+      ></a>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

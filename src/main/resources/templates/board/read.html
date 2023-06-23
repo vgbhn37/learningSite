@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <div class="row border-bottom">
+        <div class="col-9">
+          <p>
+            <span class="border-end fw-bold">제목 </span>
+            <span style="margin-left: 20px" th:text="${board.board_title}"></span>
+          </p>
+        </div>
+        <div class="col-3">
+          <p>
+            <span class="border-end fw-bold">등록일시 </span
+            ><span
+              style="margin-left: 20px"
+              th:text="${#temporals.format(board.reg_date,'yyyy-MM-dd hh:mm')}"
+            ></span>
+          </p>
+        </div>
+      </div>
+      <div class="row border-bottom" style="margin-top: 10px">
+        <div class="col">
+          <p>
+            <span class="border-end fw-bold">작성자 </span>
+            <span style="margin-left: 20px" th:text="${board.username}"></span>
+          </p>
+        </div>
+        <div class="col">
+          <span class="border-end fw-bold">과목 </span>
+          <span
+            th:if="${not #strings.isEmpty(board.subject_name)}"
+            style="margin-left: 20px"
+            th:text="${board.subject_name}"
+          ></span>
+        </div>
+        <div class="col">
+          <span class="border-end fw-bold">문제번호 </span>
+          <span
+            th:if="${board.question_no != null}"
+            style="margin-left: 20px"
+            th:text="${board.question_no}"
+          ></span>
+        </div>
+      </div>
+      <div th:if="${question != null}" class="mb-3 border-bottom">
+        <div class="card" style="margin-bottom: 30px">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-3 border-end">
+                <p class="fw-bold" th:text="${board.subject_name}"></p>
+              </div>
+              <div class="col-9">
+                <span>#</span><span th:text="${question.question_no}"></span><br />
+
+                <p th:text="${question.question_content}"></p>
+                <br /><br />
+
+                <div th:if="${not #strings.isEmpty(question.question_pic)}">
+                  <img th:src="@{|/upload/question/${question.question_pic}|}" />
+                </div>
+                <br /><br />
+                <div th:if="${not #strings.isEmpty(question.question_a1)}">
+                  <p><span>1. </span><span th:text="${question.question_a1}"></span></p>
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a2)}">
+                  <p><span>2. </span><span th:text="${question.question_a2}"></span></p>
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a3)}">
+                  <p><span>3. </span><span th:text="${question.question_a3}"></span></p>
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a4)}">
+                  <p><span>4. </span><span th:text="${question.question_a4}"></span></p>
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a5)}">
+                  <p><span>5. </span><span th:text="${question.question_a5}"></span></p>
+                </div>
+                <br /><br />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom" style="margin-bottom: 30px">
+        <div class="col-2 border-end fw-bold">작성내용</div>
+        <div class="col-10">
+          <p th:text="${board.board_content}"></p>
+        </div>
+      </div>
+      <div
+        class="row row-cols-auto border-bottom"
+        th:if="${#strings.equals(loginUser,board.username) or #strings.equals(loginUser,'admin')}"
+        style="padding-bottom: 20px"
+      >
+        <a
+          th:href="@{|/board/modify/${board.board_no}|}"
+          class="btn btn-md btn-outline-primary col"
+          th:text="수정"
+          style="margin-right: 10px"
+        ></a>
+        <a
+          href="javascript:void(0);"
+          th:data-uri="@{|/board/delete/${board.board_no}|}"
+          class="delete btn btn-md btn-outline-danger col"
+          th:text="삭제"
+        ></a>
+      </div>
+      <div class="answer" style="margin-top: 10px">
+        <p class="fw-bold">댓글</p>
+        <form
+          th:action="@{|/answer/write/${board.board_no}|}"
+          th:object="${answerForm}"
+          method="post"
+        >
+          <div th:replace="layout::formErrors"></div>
+          <div class="row">
+            <label for="answer_content" class="form-label col-2" th:text="${loginUser}"></label>
+            <input type="text" th:field="*{answer_content}" class="col-8" />
+            <div class="col-1"></div>
+            <button type="submit" class="btn btn-primary col-1">작성</button>
+          </div>
+        </form>
+        <div id="answer_list" style="margin-top: 30px">
+          <div th:if="${answerList.size()==0}" class="text-center">
+            <p class="fw-bold">댓글이 없습니다.</p>
+          </div>
+          <div th:unless="${answerList.size==0}">
+            <div th:each="answer : ${answerList}" class="row" style="margin-bottom: 8px">
+              <div class="col-2 border-end" th:text="${answer.username}"></div>
+              <div class="col-8 border-end" th:text="${answer.answer_content}"></div>
+              <div
+                class="col-2 row"
+                th:if="${#strings.equals(loginUser,answer.username) or #strings.equals(loginUser,admin)}"
+              >
+                <a
+                  th:href="@{|/answer/modify/${answer.answer_no}|}"
+                  class="btn btn-sm btn-outline-primary col"
+                  th:text="수정"
+                  style="margin-right: 10px"
+                ></a>
+                <a
+                  href="javascript:void(0);"
+                  th:data-uri="@{|/answer/delete/${answer.answer_no}|}"
+                  class="delete btn btn-sm btn-outline-danger col"
+                  th:text="삭제"
+                ></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+  <script th:inline="javascript">
+    //삭제시 confirm창
+    const delete_elements = document.querySelectorAll('.delete');
+
+    delete_elements.forEach((element) => {
+      element.addEventListener('click', (e) => {
+        if (confirm('삭제하시겠습니까?')) {
+          location.href = e.target.dataset.uri; //태그의 data-uri 값을 가져옴
+        }
+      });
+    });
+  </script>
+</html>

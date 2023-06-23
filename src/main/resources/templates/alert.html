@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body></body>
+
+  <script th:inline="javascript">
+    // model의 message를 받아서 그에 맞는 메세지 alert
+    const message = /*[[${message}]]*/ '';
+    const receivedURL = /*[[${url}]]*/ '';
+
+    alert(message);
+    location = href = receivedURL;
+  </script>
+</html>

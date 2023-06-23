@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 border-bottom">
+        <h4>문제 관리</h4>
+        <h6>* 관리자 외에는 본인이 작성한 문제만 수정,삭제 가능합니다.</h6>
+      </div>
+
+      <br /><br />
+
+      <form th:action="@{/admin/questionSearch}" method="get">
+        <div class="row justify-content-end">
+          <div class="col-11">
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="검색하실 과목명을 입력해주세요."
+            />
+          </div>
+          <div class="col-1">
+            <button type="submit" class="btn btn-primary">검색</button>
+          </div>
+        </div>
+      </form>
+      <div th:if="${sList!=null}" id="output">
+        <table class="table">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">과목코드</th>
+              <th scope="col">과목이름</th>
+              <th scope="col">-</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center" th:each="subject : ${sList}">
+              <td th:text="${subject.subject_code}"></td>
+              <td th:text="${subject.subject_name}"></td>
+              <td>
+                <a
+                  th:href="@{|/admin/questionList/${subject.subject_code}|}"
+                  class="btn btn-sm btn-outline-secondary"
+                  th:text="문제리스트"
+                ></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

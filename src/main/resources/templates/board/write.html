@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 ms-3 border-bottom">
+        <div>
+          <h4>질문 게시글 작성</h4>
+        </div>
+      </div>
+
+      <form
+        th:action="@{/board/write}"
+        th:object="${boardForm}"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div th:replace="layout::formErrors"></div>
+
+        <div class="mb-3">
+          <label for="board_title" class="form-label">제목</label>
+          <input type="text" th:field="*{board_title}" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">글쓴이</label>
+          <input type="text" name="username" th:value="${username}" class="form-control" readonly />
+        </div>
+        <br /><br />
+
+        <div th:if="${question != null}" class="mb-3">
+          <label for="question_no" class="form-label">질문한 문제</label>
+          <input
+            type="text"
+            name="question_no"
+            th:value="${question.question_no}"
+            class="form-control"
+            readonly
+          />
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-3 border-end">
+                  <p th:text="${subject_name}"></p>
+                </div>
+                <div class="col-9">
+                  <span>#</span><span th:text="${question.question_no}"></span><br />
+
+                  <p th:text="${question.question_content}"></p>
+                  <br /><br />
+
+                  <div th:if="${not #strings.isEmpty(question.question_pic)}">
+                    <img th:src="@{|/upload/question/${question.question_pic}|}" />
+                  </div>
+                  <br /><br />
+                  <div th:if="${not #strings.isEmpty(question.question_a1)}">
+                    <p><span>1. </span><span th:text="${question.question_a1}"></span></p>
+                  </div>
+
+                  <div th:if="${not #strings.isEmpty(question.question_a2)}">
+                    <p><span>2. </span><span th:text="${question.question_a2}"></span></p>
+                  </div>
+
+                  <div th:if="${not #strings.isEmpty(question.question_a3)}">
+                    <p><span>3. </span><span th:text="${question.question_a3}"></span></p>
+                  </div>
+
+                  <div th:if="${not #strings.isEmpty(question.question_a4)}">
+                    <p><span>4. </span><span th:text="${question.question_a4}"></span></p>
+                  </div>
+
+                  <div th:if="${not #strings.isEmpty(question.question_a5)}">
+                    <p><span>5. </span><span th:text="${question.question_a5}"></span></p>
+                  </div>
+                  <br /><br />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="board_content" class="form-label">내용</label>
+          <textarea th:field="*{board_content}" class="form-control" rows="15"></textarea>
+        </div>
+        <div class="position-absolute bottom-10 end-10">
+          <button type="submit" class="btn btn-primary">게시물 작성하기</button>
+        </div>
+      </form>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

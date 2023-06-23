@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.mapper.UserMapper">
+	<insert id="createUser" parameterType="SiteUser">
+
+		INSERT INTO user
+		(username, password, user_email, user_phone)
+		VALUES
+		(#{username},
+		#{password}, #{user_email}, #{user_phone})
+
+	</insert>
+	<update id="modifyUser" parameterType="SiteUser">
+		UPDATE user
+		SET 
+		username = #{username}, password = #{password},
+		user_email = #{user_email}, user_phone=#{user_phone}
+		WHERE user_no = #{user_no}
+	</update>
+
+	<insert id="createUserHistory" parameterType="long">
+		INSERT INTO
+		recently_visited (user_no)
+		VALUES (#{user_no})
+	</insert>
+	<update id="updateUserHistory">
+		UPDATE recently_visited
+		SET
+		subject_code = #{subject_code}
+		WHERE user_no = #{user_no}
+	</update>
+	<select id="findUserHistory" resultType="String">
+		SELECT b.subject_name as subject_name
+		FROM recently_visited a
+		JOIN subject b ON a.subject_code = b.subject_code
+		WHERE a.user_no = #{user_no}
+	</select>
+	
+	<delete id="deleteUser">
+		DELETE FROM user
+		WHERE user_no = #{user_no}
+	</delete>
+
+	<select id="findUserById" resultType="SiteUser">
+
+		SELECT * FROM user
+		WHERE
+		username = #{username}
+	</select>
+
+	<select id="findUserNoById" resultType="long">
+		SELECT user_no FROM user
+		WHERE username = #{username}
+	</select>
+
+	<select id="findUserByUserNo" resultType="SiteUser">
+		SELECT *
+		FROM user
+		WHERE
+		user_no = #{user_no}
+	</select>
+
+	<select id="getUserListWithPage" resultType="hashmap">
+		SELECT * FROM user
+		WHERE username != 'admin' AND username NOT REGEXP '[가-힣]'
+		LIMIT
+		#{skip},#{amount}
+	</select>
+	<select id="getUserTotal" resultType="int">
+		SELECT count(*)
+		FROM user
+		WHERE username != 'admin' AND username NOT REGEXP '[가-힣]'
+	</select>
+	<select id="getUserListBySearchWithPage" resultType="hashmap">
+		SELECT *
+		FROM (SELECT * FROM user WHERE username != 'admin' AND username NOT
+		REGEXP '[가-힣]') normal_user
+		WHERE username LIKE CONCAT('%',#{search},'%')
+		LIMIT
+		#{criteria.skip},#{criteria.amount}
+	</select>
+	<select id = "getManagerList" resultType="hashmap">
+		SELECT * FROM user
+		WHERE username = 'admin' OR username REGEXP '[가-힣]'
+	</select>
+	<select id="getUserTotalBySearch" resultType="int">
+		SELECT count(*)
+		FROM (SELECT * FROM user WHERE username != 'admin' AND username NOT
+		REGEXP '[가-힣]') normal_user
+		WHERE username LIKE CONCAT('%',#{search},'%')
+	</select>
+
+</mapper>

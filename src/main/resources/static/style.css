@@ -1,0 +1,36 @@
+
+.container{
+  padding-top : 30px;
+  background-color: white;
+  min-height: 100vh;
+  height: max-content;
+}
+
+
+body{
+  background-image: url('image/background.jpg');
+}
+
+.card{
+  margin-top: 40px;
+  margin-left: 30px;
+  margin-right: 30px;
+  padding: 30px;
+}
+
+.form_search{
+  margin-bottom: 40px;
+  width: 70%;
+}
+
+img{
+  object-fit: scale-down;
+  max-width: 100%;
+  max-height:100%;
+}
+
+
+
+
+
+

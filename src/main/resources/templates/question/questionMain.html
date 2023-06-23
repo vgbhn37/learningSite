@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 ms-3 border-bottom">
+        <h4>학습하기</h4>
+      </div>
+
+      <br /><br />
+      <form th:action="@{/question/learningSearch}" method="get">
+        <div class="row mb-5 align-items-center">
+          <div class="col-10 ms-5">
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="검색하실 과목명을 입력해주세요."
+            />
+          </div>
+
+          <div class="col-1">
+            <button type="submit" class="btn btn-primary">검색</button>
+          </div>
+        </div>
+      </form>
+      <div id="output">
+        <table class="table">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">과목코드</th>
+              <th scope="col">과목이름</th>
+              <th scope="col">학습</th>
+              <th scope="col">-</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center" th:each="subject : ${sList}">
+              <td th:text="${subject.subject_code}"></td>
+              <td th:text="${subject.subject_name}"></td>
+              <td>
+                <a
+                  th:href="@{|/question/test/${subject.subject_code}|}"
+                  class="btn btn-sm btn-outline-primary"
+                  th:text="학습"
+                ></a>
+                <a
+                  th:href="@{|/question/wrongnote/${subject.subject_code}|}"
+                  class="btn btn-sm btn-outline-warning"
+                  th:text="오답노트"
+                ></a>
+                <a
+                  th:href="@{|/question/review/${subject.subject_code}|}"
+                  class="btn btn-sm btn-outline-secondary"
+                  th:text="복습하기"
+                ></a>
+              </td>
+              <td>
+                <a
+                  href="javascript:void(0);"
+                  th:data-uri="@{|/question/initProgress/${subject.subject_code}|}"
+                  class="delete btn btn-sm btn-outline-danger"
+                  th:text="학습기록초기화"
+                ></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+  <script th:inline="javascript">
+    //삭제시 confirm창
+    const delete_elements = document.querySelectorAll('.delete');
+
+    delete_elements.forEach((element) => {
+      element.addEventListener('click', (e) => {
+        if (confirm('해당 과목의 학습 기록이 초기화 됩니다. 계속 진행하시겠습니까?')) {
+          location.href = e.target.dataset.uri; //태그의 data-uri 값을 가져옴
+        }
+      });
+    });
+  </script>
+</html>

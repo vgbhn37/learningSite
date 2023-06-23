@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 border-bottom">
+        <div>
+          <h4>공지 수정</h4>
+        </div>
+      </div>
+
+      <form
+        th:action="@{|/board/noticeModify/${board.board_no}|}"
+        th:object="${boardForm}"
+        method="post"
+      >
+        <div th:replace="layout::formErrors"></div>
+
+        <div class="mb-3">
+          <label for="board_title" class="form-label">제목</label>
+          <input
+            type="text"
+            name="board_title"
+            th:value="${board.board_title}"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">글쓴이</label>
+          <input
+            type="text"
+            name="username"
+            th:value="${board.username}"
+            class="form-control"
+            readonly
+          />
+        </div>
+        <br /><br />
+        <div class="mb-3">
+          <label for="board_content" class="form-label">내용</label>
+          <textarea
+            th:name="board_content"
+            th:text="${board.board_content}"
+            class="form-control"
+            rows="15"
+          ></textarea>
+        </div>
+        <div class="position-absolute bottom-10 end-10">
+          <button type="submit" class="btn btn-primary">공지 수정</button>
+        </div>
+      </form>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

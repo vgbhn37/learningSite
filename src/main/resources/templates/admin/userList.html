@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 border-bottom">
+        <span class="fs-3"> 유저 관리</span>
+      </div>
+
+      <br /><br />
+
+      <form th:action="@{/admin/userSearch}" method="get">
+        <div class="row justify-content-end">
+          <div class="col-11">
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="검색하실 유저ID를 입력해주세요."
+            />
+          </div>
+          <div class="col-1">
+            <button type="submit" class="btn btn-primary">검색</button>
+          </div>
+        </div>
+      </form>
+      <div th:if="${userList.size()==0}" class="text-center">
+        <br /><br />
+        <span>유저가 없습니다.</span>
+      </div>
+      <div id="output" th:unless="${userList.size()==0}">
+        <table class="table">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">유저번호</th>
+              <th scope="col">유저 ID</th>
+              <th scope="col">이메일</th>
+              <th scope="col">전화번호</th>
+              <th scope="col">유저관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center" th:each="user : ${userList}">
+              <td th:text="${user.user_no}"></td>
+              <td th:text="${user.username}"></td>
+              <td th:text="${user.user_email}"></td>
+              <td th:text="${user.user_phone}"></td>
+              <td>
+                <a
+                  th:href="@{|/admin/modifyUser/${user.user_no}|}"
+                  class="btn btn-sm btn-outline-primary"
+                  >회원 정보 수정</a
+                >
+                <a
+                  href="javascript:void(0);"
+                  th:data-uri="@{|/admin/deleteUser/${user.user_no}|}"
+                  class="delete btn btn-sm btn-outline-secondary"
+                  >회원 삭제</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Page navigation" th:if="${pmk.endPage > 0}">
+          <ul class="pagination pagination-primary justify-content-center">
+            <li class="page-item" th:if="${pmk.prev}">
+              <a
+                class="page-link"
+                th:href="@{|/admin/user?pageNum=${pmk.startPage-1}}"
+                aria-label="이전"
+              >
+                <span class="material-icons"> keyboard_arrow_left </span>
+                <span class="sr-only">이전</span>
+              </a>
+            </li>
+
+            <li
+              class="page-item"
+              th:classappend="${pmk.criteria.pageNum == number} ? 'active' : '' "
+              th:each="number : ${#numbers.sequence(pmk.startPage , pmk.endPage)}"
+            >
+              <a
+                class="page-link"
+                th:href="@{|/admin/questionList/${subject_code}?pageNum=${number}}"
+                th:text="${number}"
+              ></a>
+            </li>
+
+            <li class="page-item" th:if="${pmk.next}">
+              <a
+                class="page-link"
+                th:href="@{|/admin/user?pageNum=${pmk.endPage+1}}"
+                aria-label="다음"
+              >
+                <span class="material-icons"> keyboard_arrow_right </span>
+                <span class="sr-only">다음</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+  <script th:inline="javascript">
+    //삭제시 confirm창
+    const delete_elements = document.querySelectorAll('.delete');
+
+    delete_elements.forEach((element) => {
+      element.addEventListener('click', (e) => {
+        if (confirm('삭제하시겠습니까?')) {
+          location.href = e.target.dataset.uri; //태그의 data-uri 값을 가져옴
+        }
+      });
+    });
+  </script>
+</html>

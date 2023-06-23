@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 border-bottom">
+        <div>
+          <h4>댓글 수정하기</h4>
+        </div>
+      </div>
+      <br /><br />
+      <form
+        th:action="@{|/answer/modify/${answer.answer_no}|}"
+        th:object="${answerForm}"
+        method="post"
+      >
+        <div th:replace="layout::formErrors"></div>
+
+        <div class="mb-3">
+          <label for="answer_content" class="form-label">댓글내용</label>
+          <textarea
+            name="answer_content"
+            th:text="${answer.answer_content}"
+            class="form-control"
+            rows="10"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">댓글수정</button>
+      </form>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

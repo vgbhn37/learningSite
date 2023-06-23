@@ -1,0 +1,52 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.mapper.SubjectMapper">
+
+	<insert id="createSubject" parameterType="Subject">
+		INSERT INTO subject
+		VALUES (#{subject_code},#{subject_name})
+	</insert>
+	<update id="updateSubject" parameterType="Subject">
+		UPDATE subject SET
+		subject_name = #{subject_name}
+		WHERE subject_code = #{subject_code}
+	</update>
+	<delete id="deleteSubject" parameterType="String">
+		DELETE FROM subject
+		WHERE subject_code = #{subject_code}
+	</delete>
+	<select id="getSubjectList" resultType="hashmap">
+		SELECT *
+		FROM subject
+	</select>
+	<select id="getSubjectByCode" resultType="Subject">
+		SELECT *
+		FROM subject
+		WHERE subject_code = #{subject_code}
+	</select>
+	<select id="getSubjectByName" resultType="Subject">
+		SELECT *
+		FROM subject
+		WHERE subject_name = #{subject_name}
+	</select>
+	<select id="getSubjectListBySearch" resultType="hashmap">
+		SELECT *
+		FROM
+		subject
+		WHERE subject_name LIKE CONCAT('%',#{search},'%')
+	</select>
+	<select id="getSubjectNameByQuestion" resultType="String">
+		SELECT DISTINCT
+		b.subject_name as subject_name
+		FROM question a JOIN subject b
+		ON
+		a.subject_code = b.subject_code
+		WHERE a.subject_code = #{subject_code}
+	</select>
+	<select id="getSubjectCodeByQNo" resultType="String">
+		SELECT subject_code
+		FROM question
+		WHERE question_no = #{question_no}
+	</select>
+
+</mapper>

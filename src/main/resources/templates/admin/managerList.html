@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 border-bottom">
+        <p class="fs-3">운영진 관리</p>
+        <br />
+        <a th:href="@{/admin/createTeacher}" class="btn btn-sm btn-outline-primary"
+          >선생님 계정 만들기</a
+        >
+      </div>
+
+      <br /><br />
+
+      <div th:if="${managerList.size()==0}" class="text-center">
+        <br /><br />
+        <span>유저가 없습니다.</span>
+      </div>
+      <div id="output" th:unless="${managerList.size()==0}">
+        <table class="table">
+          <thead>
+            <tr class="text-center">
+              <th scope="col">유저번호</th>
+              <th scope="col">유저 ID</th>
+              <th scope="col">이메일</th>
+              <th scope="col">전화번호</th>
+              <th scope="col">유저관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center" th:each="user : ${managerList}">
+              <td th:text="${user.user_no}"></td>
+              <td th:text="${user.username}"></td>
+              <td th:text="${user.user_email}"></td>
+              <td th:text="${user.user_phone}"></td>
+              <td>
+                <a
+                  th:if="${not #strings.equals(user.username,'admin')}"
+                  th:href="@{|/admin/modifyTeacher/${user.user_no}|}"
+                  class="btn btn-sm btn-outline-primary"
+                  >정보 수정</a
+                >
+                <a
+                  th:if="${#strings.equals(user.username,'admin')}"
+                  th:href="@{|/admin/modifyUser/${user.user_no}|}"
+                  class="btn btn-sm btn-outline-primary"
+                  >정보 수정</a
+                >
+                <a
+                  th:if="${not #strings.equals(user.username,'admin')}"
+                  href="javascript:void(0);"
+                  th:data-uri="@{|/admin/deleteUser/${user.user_no}|}"
+                  class="delete btn btn-sm btn-outline-secondary"
+                  >선생님 계정 삭제</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+  <script th:inline="javascript">
+    //삭제시 confirm창
+    const delete_elements = document.querySelectorAll('.delete');
+
+    delete_elements.forEach((element) => {
+      element.addEventListener('click', (e) => {
+        if (confirm('삭제하시겠습니까?')) {
+          location.href = e.target.dataset.uri; //태그의 data-uri 값을 가져옴
+        }
+      });
+    });
+  </script>
+</html>

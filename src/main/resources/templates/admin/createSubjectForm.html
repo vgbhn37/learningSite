@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 border-bottom">
+        <div>
+          <h4>과목 만들기</h4>
+        </div>
+      </div>
+      <h6>*표시는 필수입력사항입니다.</h6>
+      <br /><br />
+
+      <form th:action="@{/admin/createSubject}" th:object="${subjectForm}" method="post">
+        <div th:replace="layout::formErrors"></div>
+
+        <div class="mb-3">
+          <label for="subject_code" class="form-label">과목코드* (0001~9999 네 자리 숫자)</label>
+          <input type="text" th:field="*{subject_code}" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="subject_name" class="form-label">과목이름* (15글자 이하)</label>
+          <input type="text" th:field="*{subject_name}" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">과목 만들기</button>
+      </form>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

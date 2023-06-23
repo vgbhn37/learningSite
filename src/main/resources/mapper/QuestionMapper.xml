@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.mapper.QuestionMapper">
+
+	<insert id="createQuestion" parameterType="Question">
+		INSERT INTO question
+		(author_no, subject_code, question_content, question_a1,
+		question_a2,
+		question_a3,
+		question_a4, question_a5, question_answer,
+		question_explanation,
+		question_pic,
+		reg_date)
+		VALUES (#{author_no},
+		#{subject_code},
+		#{question_content},#{question_a1}, #{question_a2},
+		#{question_a3},
+		#{question_a4}, #{question_a5}, #{question_answer},
+		#{question_explanation},
+		#{question_pic}, #{reg_date})
+	</insert>
+	<update id="updateQuestion" parameterType="Question">
+		UPDATE question
+		SET
+		question_content = #{question_content}, question_a1 = #{question_a1},
+		question_a2 =
+		#{question_a2} , question_a3 = #{question_a3},
+		question_a4 =
+		#{question_a4} , question_a5 = #{question_a5},
+		question_answer =
+		#{question_answer}, question_explanation = #{question_explanation},
+		question_pic = #{question_pic}
+		WHERE question_no = #{question_no}
+	</update>
+	<delete id="deleteQuestion" parameterType="long">
+		DELETE FROM question
+		WHERE question_no = #{question_no}
+	</delete>
+	<delete id="initProgress">
+		DELETE FROM done_question
+		WHERE question_no IN (SELECT question_no FROM question WHERE subject_code = #{subject_code})
+		AND user_no = #{user_no}
+	</delete>
+	<select id="displayOneQuestion" resultType="Question">
+		SELECT a.question_no question_no, a.subject_code
+		subject_code, question_content, question_a1, question_a2, question_a3,
+		question_a4, question_a5,
+		question_answer, question_explanation, question_pic, reg_date, subject_name
+		FROM
+		question a LEFT JOIN (SELECT question_no FROM done_question WHERE
+		user_no = #{user_no}) b
+		ON a.question_no = b.question_no
+		JOIN subject c
+		ON a.subject_code = c.subject_code
+		WHERE b.question_no IS NULL AND a.subject_code = #{subject_code}
+		LIMIT 1;
+	</select>
+	<select id="getQuestionList" resultType="Question">
+		SELECT *
+		FROM question
+	</select>
+	<select id="selectQuestionById" resultType="Question">
+		SELECT *
+		FROM question
+		WHERE question_no = #{questionNo}
+	</select>
+	<insert id="saveResult" parameterType="DoneQuestion">
+		INSERT INTO done_question
+		VALUES(#{user_no},#{question_no},#{reg_date},#{correct},#{user_select})
+	</insert>
+	<select id="getWrongQuestionList" resultType="Question">
+		SELECT *
+		FROM
+		question a JOIN (SELECT question_no, correct, user_select FROM done_question WHERE
+		user_no = #{user_no}) b
+		ON a.question_no = b.question_no
+		WHERE b.correct = 'x' AND a.subject_code = #{subject_code}
+	</select>
+	<select id="getCorrectQuestionList" resultType="Question">
+		SELECT *
+		FROM
+		question a JOIN (SELECT question_no, correct, user_select FROM done_question WHERE
+		user_no = #{user_no}) b
+		ON a.question_no = b.question_no
+		WHERE b.correct = 'o' AND a.subject_code = #{subject_code}
+	</select>
+	<select id="getSubjectName" resultType="String">
+		SELECT DISTINCT
+		subject_name
+		FROM question a JOIN subject b
+		ON a.subject_code = b.subject_code
+		WHERE
+		a.subject_code = #{subject_code}
+	</select>
+	
+	<select id ="getQuestionListBySubject" resultType="hashmap">
+		SELECT * 
+		FROM question
+		WHERE subject_code = #{subject_code}
+	</select>
+	<select id="getQuestionListBySubjectWithPage" resultType="hashmap">
+		SELECT * 
+		FROM question
+		WHERE subject_code = #{subject_code}
+		LIMIT #{criteria.skip},#{criteria.amount}
+	</select>
+	<select id="getQuestionTotal" resultType="int">
+		SELECT count(*)
+		FROM question
+		WHERE subject_code = #{subject_code}
+	</select>
+	<select id="getQuestionByQNo" resultType="Question">
+		SELECT *
+		FROM question
+		WHERE question_no = #{question_no}
+	</select>
+	<select id="getUsernameByQuestion" resultType="String">
+		SELECT DISTINCT username
+		FROM question a
+		JOIN user b ON a.author_no = b.user_no
+		WHERE b.user_no = #{user_no}
+	</select>
+	<select id="getSubjectByQuestion" resultType="String">
+		SELECT subject_code
+		FROM question
+		WHERE question_no = #{question_no}
+	</select>
+	<update id="updateWrongNote">
+		UPDATE done_question
+		SET correct = 'o' 
+		WHERE user_no = #{user_no} AND question_no = #{question_no}
+	</update>
+
+</mapper>

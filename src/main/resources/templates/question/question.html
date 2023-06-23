@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <span></span>
+    <div th:if="${question} == null">
+      <script>
+        alert('해당 과목의 문제풀이를 완료하셨습니다. 오답노트나 복습페이지를 확인해주세요.');
+        location.href = '/question/learning';
+      </script>
+    </div>
+    <div th:unless="${question} == null" class="container my-3 px-5 py-5">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3 border-end">
+              <p th:text="${question.subject_name}"></p>
+            </div>
+            <div class="col-9">
+              <form th:action="@{|/question/judge/${question.question_no}|}" method="post">
+                <span>#</span><span th:text="${question.question_no}"></span><br />
+
+                <p th:text="${question.question_content}"></p>
+                <br /><br />
+
+                <div th:if="${not #strings.isEmpty(question.question_pic)}">
+                  <img th:src="@{|/upload/question/${question.question_pic}|}" />
+                </div>
+                <br /><br />
+                <div th:if="${not #strings.isEmpty(question.question_a1)}">
+                  <input type="radio" name="answer" value="1" th:text="${question.question_a1}" />
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a2)}">
+                  <input type="radio" name="answer" value="2" th:text="${question.question_a2}" />
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a3)}">
+                  <input type="radio" name="answer" value="3" th:text="${question.question_a3}" />
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a4)}">
+                  <input type="radio" name="answer" value="4" th:text="${question.question_a4}" />
+                </div>
+
+                <div th:if="${not #strings.isEmpty(question.question_a5)}">
+                  <input type="radio" name="answer" value="5" th:text="${question.question_a5}" />
+                </div>
+                <br /><br />
+                <button type="submit" class="btn btn-primary btn-md">제출</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

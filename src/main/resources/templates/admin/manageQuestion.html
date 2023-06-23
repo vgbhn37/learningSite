@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <p><span>작성자 :</span> <span th:text="${author_name}"></span></p>
+            <hr />
+            <p>#<span th:text="${question.question_no}"></span></p>
+            <p th:text="${question.question_content}"></p>
+            <br />
+            <hr />
+            <div th:if="${not #strings.isEmpty(question.question_pic)}">
+              <img th:src="@{|/upload/question/${question.question_pic}|}" />
+            </div>
+            <br />
+            <div th:if="${not #strings.isEmpty(question.question_a1)}">
+              <span>1.</span>
+              <span th:text="${question.question_a1}"></span>
+            </div>
+            <div th:if="${not #strings.isEmpty(question.question_a2)}">
+              <span>2.</span>
+              <span th:text="${question.question_a2}"></span>
+            </div>
+            <div th:if="${not #strings.isEmpty(question.question_a3)}">
+              <span>3.</span>
+              <span th:text="${question.question_a3}"></span>
+            </div>
+            <div th:if="${not #strings.isEmpty(question.question_a4)}">
+              <span>4.</span>
+              <span th:text="${question.question_a4}"></span>
+            </div>
+            <div th:if="${not #strings.isEmpty(question.question_a5)}">
+              <span>5.</span>
+              <span th:text="${question.question_a5}"></span>
+            </div>
+            <br />
+            <br />
+            <hr />
+            <br />
+            <p>
+              <span>정답 : </span>
+              <span th:text="${question.question_answer}"></span>
+            </p>
+            <br />
+            <p>
+              <span>해설 : </span>
+              <span th:text="${question.question_explanation}"></span>
+            </p>
+          </div>
+          <a
+            th:if="${#strings.equals(loginUser,author_name) or #strings.equals(loginUser,'admin')}"
+            th:href="@{|/admin/modifyQuestion/${question.question_no}|}"
+            class="btn btn-sm btn-outline-secondary"
+            th:text="수정"
+          ></a>
+          <a
+            th:if="${#strings.equals(loginUser,author_name) or #strings.equals(loginUser,'admin')}"
+            href="javascript:void(0);"
+            th:data-uri="@{|/admin/deleteQuestion/${question.question_no}|}"
+            class="delete btn btn-sm btn-outline-secondary"
+            th:text="삭제"
+          ></a>
+        </div>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+  <script th:inline="javascript">
+    //삭제시 confirm창
+    const delete_elements = document.querySelectorAll('.delete');
+
+    delete_elements.forEach((element) => {
+      element.addEventListener('click', (e) => {
+        if (confirm('삭제하시겠습니까?')) {
+          location.href = e.target.dataset.uri; //태그의 data-uri 값을 가져옴
+        }
+      });
+    });
+  </script>
+</html>

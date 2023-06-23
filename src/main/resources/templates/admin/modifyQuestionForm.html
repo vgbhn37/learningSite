@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 border-bottom">
+        <div>
+          <h4>문제 수정</h4>
+        </div>
+      </div>
+      <h6>*표시는 필수입력사항입니다.</h6>
+      <br /><br />
+
+      <form
+        th:action="@{|/admin/modifyQuestion/${question.question_no}|}"
+        th:object="${questionForm}"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div th:replace="layout::formErrors"></div>
+
+        <div class="mb-3">
+          <label for="subject_code" class="form-label">과목코드</label>
+          <input
+            type="text"
+            name="subject_code"
+            th:value="${question.subject_code}"
+            class="form-control"
+            readonly
+          />
+        </div>
+        <div class="mb-3">
+          <label for="question_content" class="form-label">문제*</label>
+          <textarea
+            name="question_content"
+            th:text="${question.question_content}"
+            class="form-control"
+            rows="10"
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="question_a1" class="form-label">보기 1번*</label>
+          <input
+            type="text"
+            name="question_a1"
+            th:value="${question.question_a1}"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="question_a2" class="form-label">보기 2번*</label>
+          <input
+            type="text"
+            name="question_a2"
+            th:value="${question.question_a2}"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="question_a3" class="form-label">보기 3번</label>
+          <input
+            type="text"
+            name="question_a3"
+            th:value="${question.question_a3}"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="question_a4" class="form-label">보기 4번</label>
+          <input
+            type="text"
+            name="question_a4"
+            th:value="${question.question_a4}"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="question_a5" class="form-label">보기 5번</label>
+          <input
+            type="text"
+            name="question_a5"
+            th:value="${question.question_a5}"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="question_answer" class="form-label">정답*</label>
+          <input
+            type="text"
+            name="question_answer"
+            th:value="${question.question_answer}"
+            class="form-control"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="question_explanation" class="form-label">해설</label>
+          <textarea
+            name="question_explanation"
+            th:text="${question.question_explanation}"
+            class="form-control"
+            rows="10"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="pic_file" class="form-label">이미지 파일</label>
+          <input type="file" th:field="*{pic_file}" class="form-control" />
+        </div>
+        <div th:if="${not #strings.isEmpty(question.question_pic)}">
+          <img th:src="@{|/upload/question/${question.question_pic}|}" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">문제 수정</button>
+      </form>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

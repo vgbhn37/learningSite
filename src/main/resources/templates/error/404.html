@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Learning</title>
+    <!-- 부트스트랩적용 및 커스텀 CSS 적용 -->
+    <link rel="stylesheet" th:href="@{/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/style.css}" />
+    <!-- 부트스트랩 JS 및 JQuery 적용 -->
+    <script th:src="@{/bootstrap.bundle.min.js}"></script>
+  </head>
+  <body>
+    <div class="text-center">
+      <img th:src="@{/image/pagenotfound.png}" alt="pagenotfound" />
+    </div>
+  </body>
+</html>

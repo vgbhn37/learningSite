@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <!-- 여기부터 시작 -->
+      <div class="my-3 ms-3 border-bottom">
+        <p class="fs-3"><span> 공지사항</span></p>
+        <br />
+        <a
+          sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_TEACHER')"
+          th:href="@{/board/noticeWrite}"
+          class="btn btn-sm btn-outline-secondary"
+          th:text="공지작성"
+        ></a>
+      </div>
+
+      <br /><br />
+
+      <br /><br />
+      <form th:action="@{/board/noticeSearch}" method="get">
+        <div class="form_search row w-100">
+          <div class="col-11">
+            <input
+              type="text"
+              class="form-control"
+              name="search"
+              placeholder="검색어를 입력해주세요."
+            />
+          </div>
+          <div class="col-1">
+            <button type="submit" class="btn btn-primary">검색</button>
+          </div>
+        </div>
+      </form>
+      <div th:if="${noticeList.size()==0}" class="text-center">
+        <br /><br />
+        <span>해당 조건의 게시글이 없습니다.</span>
+      </div>
+      <div id="output" th:unless="${noticeList.size()==0}">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr class="text-center">
+              <th class="text-center" style="width: 20%">글쓴이</th>
+              <th class="text-center" style="width: 60%">제목</th>
+              <th class="text-center" style="width: 20%">시간</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="text-center" th:each="board : ${noticeList}">
+              <td class="align-middle text-center">
+                <span class="text-xxs" th:text="${board.username}"></span>
+              </td>
+
+              <td>
+                <a
+                  th:href="@{|/board/notice/${board.board_no}|}"
+                  class="text-decoration-none text-primary test-xxs"
+                  th:text="${board.board_title}"
+                ></a>
+              </td>
+              <td class="text-center">
+                <span
+                  class="text-xxs"
+                  th:text="${#temporals.format(board.reg_date, 'yyyy-MM-dd HH:mm')}"
+                ></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Page navigation" th:if="${pmk.endPage > 0}">
+          <ul class="pagination pagination-primary justify-content-center">
+            <li class="page-item" th:if="${pmk.prev}">
+              <a
+                class="page-link"
+                th:href="@{|/board/list?pageNum=${pmk.startPage-1}}"
+                aria-label="이전"
+              >
+                <span class="material-icons"> keyboard_arrow_left </span>
+                <span class="sr-only">이전</span>
+              </a>
+            </li>
+
+            <li
+              class="page-item"
+              th:classappend="${pmk.criteria.pageNum == number} ? 'active' : '' "
+              th:each="number : ${#numbers.sequence(pmk.startPage , pmk.endPage)}"
+            >
+              <a
+                class="page-link"
+                th:href="@{|/board/list?pageNum=${number}}"
+                th:text="${number}"
+              ></a>
+            </li>
+
+            <li class="page-item" th:if="${pmk.next}">
+              <a
+                class="page-link"
+                th:href="@{|/board/list?pageNum=${pmk.endPage+1}}"
+                aria-label="다음"
+              >
+                <span class="material-icons"> keyboard_arrow_right </span>
+                <span class="sr-only">다음</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+</html>

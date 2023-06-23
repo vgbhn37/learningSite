@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="layout::head"></head>
+  <body>
+    <nav th:replace="layout::nav"></nav>
+    <div class="container my-3 px-5 py-5">
+      <div class="row border-bottom">
+        <div class="col">
+          <p>
+            <span class="border-end fw-bold">제목 </span>
+            <span style="margin-left: 20px" th:text="${board.board_title}"></span>
+          </p>
+        </div>
+      </div>
+      <div class="row border-bottom" style="margin-top: 10px">
+        <div class="col">
+          <p>
+            <span class="border-end fw-bold">작성자 </span>
+            <span style="margin-left: 20px" th:text="${board.username}"></span>
+          </p>
+          <div class="col">
+            <p>
+              <span class="border-end fw-bold">등록일시 </span
+              ><span
+                style="margin-left: 20px"
+                th:text="${#temporals.format(board.reg_date,'yyyy-MM-dd hh:mm')}"
+              ></span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row border-bottom" style="margin-top: 10px; margin-bottom: 30px">
+        <div class="col-2 border-end fw-bold">작성내용</div>
+        <div class="col-10">
+          <p th:text="${board.board_content}"></p>
+        </div>
+      </div>
+      <div
+        class="row row-cols-auto border-bottom"
+        th:if="${loginUser!=null and (#strings.equals(loginUser,board.username) or #strings.equals(loginUser,'admin'))}"
+        style="padding-bottom: 20px"
+      >
+        <a
+          th:href="@{|/board/noticeModify/${board.board_no}|}"
+          class="btn btn-md btn-outline-primary col"
+          th:text="수정"
+          style="margin-right: 10px"
+        ></a>
+        <a
+          href="javascript:void(0);"
+          th:data-uri="@{|/board/noticeDelete/${board.board_no}|}"
+          class="delete btn btn-md btn-outline-danger col"
+          th:text="삭제"
+        ></a>
+      </div>
+    </div>
+    <footer th:replace="layout::footer"></footer>
+  </body>
+  <script th:inline="javascript">
+    //삭제시 confirm창
+    const delete_elements = document.querySelectorAll('.delete');
+
+    delete_elements.forEach((element) => {
+      element.addEventListener('click', (e) => {
+        if (confirm('삭제하시겠습니까?')) {
+          location.href = e.target.dataset.uri; //태그의 data-uri 값을 가져옴
+        }
+      });
+    });
+  </script>
+</html>
