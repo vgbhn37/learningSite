@@ -87,10 +87,12 @@ public class AdminController {
 		if (result.hasErrors()) {
 			return "admin/createSubjectForm";
 		}
-
+		
+		//Form에 입력된 값으로 이미 등록된 과목이 있는지 검색
 		Subject subjectByCode = subjectService.getSubjectByCode(subjectForm.getSubject_code());
 		Subject subjectByName = subjectService.getSubjectByName(subjectForm.getSubject_name());
-
+		
+		// 만약 입력된 값에 해당하는 과목이 있으면 에러메세지 출력 후 Form으로 되돌아감
 		if (subjectByName != null) {
 			result.reject("createSubjectFailed", "이미 등록된 과목이름입니다.");
 			return "admin/createSubjectForm"; // 되돌아감
@@ -117,6 +119,7 @@ public class AdminController {
 	// 과목관리 페이지에서 과목명으로 과목 검색(LIKE 연산자 활용)
 	@GetMapping("/subjectSearch")
 	public String searchSubject(@RequestParam(value = "search") String search, Model model) {
+		// 검색어를 search 파라미터로 받아서 활용
 		List<Subject> sList = subjectService.getSubjectListBySearch(search);
 		model.addAttribute("sList", sList);
 		return "admin/subjectList";
@@ -135,10 +138,12 @@ public class AdminController {
 	@PostMapping("/modifySubject/{subject_code}")
 	public String modifySubject(@PathVariable("subject_code") String subject_code, @Valid SubjectForm subjectForm,
 			BindingResult result, Model model) {
-
+		
+		//Form에 입력된 값으로 이미 등록된 과목이 있는지 검색
 		Subject subjectByCode = subjectService.getSubjectByCode(subject_code);
 		Subject subjectByName = subjectService.getSubjectByName(subjectForm.getSubject_name());
-
+		
+		//이미 등록된 과목이 있거나 유효성 검사를 통과 못할 시 Form으로 되돌아감
 		if (result.hasErrors()) {
 			model.addAttribute("subject", subjectByCode);
 			return "admin/modifySubjectForm";
@@ -164,10 +169,10 @@ public class AdminController {
 		Subject subjectByCode = subjectService.getSubjectByCode(subject_code);
 		List<Question> QList = questionService.getQuestionListBySubject(subject_code);
 		
+		//주소창에 url로 직접 접근 시, 없는 과목코드를 주소창에 입력했으면 에러페이지(alert창 띄운 뒤 뒤로가기로 설정)
 		if(subjectByCode==null) {
-			model.addAttribute("message", "잘못된 과목코드입니다");
-			model.addAttribute("url","/admin/subject");
-			return "alert";
+			return "error/500";
+		// 문제가 이미 등록되어 있는 과목의 경우 삭제가 안되도록 함(DB 외래키 설정 - on delete cascade 설정을 해두지않음)
 		} else if (QList.size()>0) {
 			model.addAttribute("message", "문제가 등록되어 있는 과목은 삭제할 수 없습니다.");
 			model.addAttribute("url","/admin/subject");
@@ -204,10 +209,14 @@ public class AdminController {
 	public String questionList(@PathVariable("subject_code") String subject_code, 
 			Criteria criteria, Model model) {
 		
+		//페이징의 기준이 되는 critria객체와 subject_code를 받아 해당 과목의 문제 리스트를 1페이지에 10개씩 보여주기
 		List<Question> qList = questionService.getQuestionListBySubjectWithPage(criteria, subject_code);
 		int total = questionService.getQuestionTotal(subject_code);
 		Subject subject = subjectService.getSubjectByCode(subject_code); 
+		
+		// 해당 과목 문제의 총 갯수와 페이징 기준 criteria로 페이지를 만듦
 		PageMaker pageMaker = new PageMaker(criteria,total);
+		
 		model.addAttribute("pmk", pageMaker);
 		model.addAttribute("qList",qList);
 		model.addAttribute("subject", subject);
@@ -219,7 +228,9 @@ public class AdminController {
 	@GetMapping("/manageQuestion/{question_no}")
 	public String manageQuestion(@PathVariable("question_no")Long question_no, Principal principal, Model model) {
 		Question question = questionService.getQuestionByQNo(question_no);
+		// 해당 문제의 제작자 이름을 페이지에 표시하기 위함
 		String username = questionService.getUsernameByQuestion(question.getAuthor_no());
+		// 현재 로그인 한 유저의 정보를 보내 admin이나 해당 문제를 제작한 사람이 아니면 문제 수정 및 삭제를 못하게 함
 		String loginUser = principal.getName();
 		
 		model.addAttribute("loginUser", loginUser);
@@ -259,12 +270,13 @@ public class AdminController {
 	@PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
 	@GetMapping("/deleteQuestion/{question_no}")
 	public String deleteQuestion(@PathVariable("question_no")Long question_no, Model model) {
+		
 		Question question = questionService.getQuestionByQNo(question_no);
+		//주소창에 직접 url 입력 시, 이미 없는 문제번호라면 에러페이지 (alert 후 뒤로가기)
 		if(question==null) {
-			model.addAttribute("message", "없는 문제번호입니다.");
-			model.addAttribute("url","/admin/question");
-			return "alert";
+			return "error/500";
 		}
+		
 		model.addAttribute("message", "문제 삭제 완료");
 		model.addAttribute("url","/admin/questionList/"+ question.getSubject_code());
 		questionService.deleteQuestion(question_no);
@@ -303,14 +315,17 @@ public class AdminController {
    	    userService.createUserHistory(user_no);
         model.addAttribute("message","선생님계정 만들기에 성공하셨습니다");
         model.addAttribute("url","/admin/manager");
-        return "alert"; //회원가입 성공 메세지를 보내 alert 페이지로 (message에 따라 alert 내용을 다르게 설정)
+        return "alert"; //회원가입 성공 메세지를 보내 alert 페이지로
 	}
 	
 	//회원 리스트
 	@GetMapping("/user")
 	public String userList(Criteria criteria, Model model) {
+		
+		//페이징의 기준이 되는 criteria 객체를 가지고 전체 회원리스트를 불러옴 (관리자 계정과 선생님 계정 제외)
 		List<SiteUser> userList = userService.getUserListWithPage(criteria);
 		int total = userService.getUserTotal();
+		//전체 일반 유저 수와 criteria를 가지고 페이지메이커를 만들어 페이지네이션
 		PageMaker pageMaker = new PageMaker(criteria,total);
 		
 		model.addAttribute("pmk",pageMaker);
@@ -322,8 +337,10 @@ public class AdminController {
 	@GetMapping("/userSearch")
 	public String searchUserList(@RequestParam("search")String search, Criteria criteria, Model model) {
 		
+		//페이징의 기준이 되는 criteria 객체와 검색어를 가져와 검색어에 해당하는 유저리스트 가졍기 
 		List<SiteUser> userList = userService.getUserListBySearchWithPage(criteria, search);
 		int total = userService.getUserTotalBySearch(search);
+		//검색된 유저의 총 인원 수와 criteria를 가지고 페이지네이션
 		PageMaker pageMaker = new PageMaker(criteria,total);
 		
 		model.addAttribute("pmk",pageMaker);
@@ -370,6 +387,7 @@ public class AdminController {
 			return "admin/modifyUserForm"; //되돌아감
 		}
         
+        //admin일 경우 관리자정보 수정 메세지를 띄우게 함
         if(modifyUser.getUsername().equals("admin")) {
         	   model.addAttribute("message","관리자정보 수정완료");
                model.addAttribute("url","/admin/manager");
@@ -386,12 +404,14 @@ public class AdminController {
 	public String deleteUser(@PathVariable("user_no")Long user_no, Model model) {
 		
 		SiteUser user = userService.findUserByUserNo(user_no);
+		//주소 창에 직접 url 입력 시 없는 유저 번호면 메세지 alert
 		if(user==null) {
 			model.addAttribute("message", "없는 유저번호입니다.");
 			model.addAttribute("url","/admin/user");
 			return "alert";
 		}
 		
+		//선생님 계정은 한글로만 작성 가능하게 해두었으므로, 삭제하려는 계정의 id가 한글일 경우 선생님 계정 삭제 메세지 alert
 		if(user.getUsername().matches("^[가-힣]*$")) {
 			model.addAttribute("message", "선생님 계정 삭제 완료");
 			model.addAttribute("url","/admin/manager");		

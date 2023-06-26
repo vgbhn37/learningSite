@@ -15,7 +15,7 @@
 		DELETE FROM subject
 		WHERE subject_code = #{subject_code}
 	</delete>
-	<select id="getSubjectList" resultType="hashmap">
+	<select id="getSubjectList" resultType="Subject">
 		SELECT *
 		FROM subject
 	</select>
@@ -29,7 +29,7 @@
 		FROM subject
 		WHERE subject_name = #{subject_name}
 	</select>
-	<select id="getSubjectListBySearch" resultType="hashmap">
+	<select id="getSubjectListBySearch" resultType="Subject">
 		SELECT *
 		FROM
 		subject

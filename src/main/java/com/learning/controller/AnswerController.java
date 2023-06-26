@@ -50,7 +50,8 @@ public class AnswerController {
 
 			Board board = boardService.getBoard(board_no);
 			List<Answer> answerList = answerService.getAnswerList(board_no);
-
+			
+			//문제와 연동된 질문 게시글일 경우 문제의 정보를 가져옴
 			if (board.getQuestion_no() != null) {
 				Question question = questionService.getQuestionByQNo(board.getQuestion_no());
 				model.addAttribute("question", question);
@@ -62,7 +63,8 @@ public class AnswerController {
 			return "/board/read";
 
 		}
-
+		
+		//댓글 DB에 등록될 user_no
 		Long user_no = userService.findUserNoById(principal.getName());
 		answerService.writeAnswer(answerForm, user_no, board_no);
 		
@@ -79,9 +81,9 @@ public class AnswerController {
 			@ModelAttribute("answerForm") AnswerForm answerForm, Principal principal, Model model) {
 		Answer answer = answerService.getAnswerByNo(answer_no);
 		
-		//없는 댓글 번호로 접근 시 에러페이지
+		// 없는 댓글 번호로 접근 시 에러페이지
 		if (answer == null) {
-			return "error/403";
+			return "error/500";
 		}
 		// 권한이 없는 사람이 접근 시 에러페이지
 		if (!answer.getUsername().equals(principal.getName()) && !principal.getName().equals("admin")) {
@@ -117,9 +119,11 @@ public class AnswerController {
 
 		Answer answer = answerService.getAnswerByNo(answer_no);
 		
+		// 없는 댓글 번호로 접근 시 에러페이지
 		if (answer == null) {
-			return "error/403";
+			return "error/500";
 		}
+		// 권한이 없는 사람이 접근 시 에러페이지
 		if (!answer.getUsername().equals(principal.getName()) && !principal.getName().equals("admin")) {
 			return "error/403";
 		}

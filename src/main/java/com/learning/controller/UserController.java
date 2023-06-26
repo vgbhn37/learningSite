@@ -53,6 +53,7 @@ public class UserController {
 			return "user/signup_form"; // 되돌아감
 		}
 		Long user_no = userService.findUserNoById(userForm.getUsername());
+		//최근 본 과목을 기록하기 위해 튜플 생성
 		userService.createUserHistory(user_no);
 		model.addAttribute("message", "회원가입에 성공하셨습니다");
 		model.addAttribute("url", "/");
@@ -79,7 +80,7 @@ public class UserController {
 			Model model) {
 
 		SiteUser modifyUser = userService.findUserByUserNo(user_no);
-
+		//유효성 검사를 통과하지 못했을 시 Form으로 되돌아감
 		if (result.hasErrors()) {
 			model.addAttribute("user", modifyUser);
 			return "user/modifyUser";

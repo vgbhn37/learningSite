@@ -61,7 +61,7 @@
 		user_no = #{user_no}
 	</select>
 
-	<select id="getUserListWithPage" resultType="hashmap">
+	<select id="getUserListWithPage" resultType="SiteUser">
 		SELECT * FROM user
 		WHERE username != 'admin' AND username NOT REGEXP '[가-힣]'
 		LIMIT
@@ -72,7 +72,7 @@
 		FROM user
 		WHERE username != 'admin' AND username NOT REGEXP '[가-힣]'
 	</select>
-	<select id="getUserListBySearchWithPage" resultType="hashmap">
+	<select id="getUserListBySearchWithPage" resultType="SiteUser">
 		SELECT *
 		FROM (SELECT * FROM user WHERE username != 'admin' AND username NOT
 		REGEXP '[가-힣]') normal_user
@@ -80,7 +80,7 @@
 		LIMIT
 		#{criteria.skip},#{criteria.amount}
 	</select>
-	<select id = "getManagerList" resultType="hashmap">
+	<select id = "getManagerList" resultType="SiteUser">
 		SELECT * FROM user
 		WHERE username = 'admin' OR username REGEXP '[가-힣]'
 	</select>

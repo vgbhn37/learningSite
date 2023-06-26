@@ -56,9 +56,10 @@ public class QuestionController {
 			Principal principal) {
 
 		Long user_no = userService.findUserNoById(principal.getName());
+		// 유저가 풀지 않은 문제를 하나씩 출력
 		Question question = questionService.displayOneQuestion(user_no, subject_code);
 
-		// 유저 방문 기록
+		// 유저 방문 기록 (최근 학습한 과목 갱신)
 		userService.updateUserHistory(subject_code, user_no);
 		model.addAttribute("question", question);
 
@@ -73,10 +74,13 @@ public class QuestionController {
 		Long user_no = userService.findUserNoById(principal.getName());
 
 		model.addAttribute("question", question);
+		//문제의 답안을 제출 시 user_no,question_no,정오 여부,유저가 작성한 답안을 'done_question' DB에 저장
+		//정답일 경우
 		if (answer.equals(question.getQuestion_answer())) {
 			model.addAttribute("result", "correct");
 			questionService.saveResult(user_no, question_no, "o", answer);
 			return "question/result";
+		//오답일 경우 
 		} else {
 			model.addAttribute("result", "incorrect");
 			questionService.saveResult(user_no, question_no, "x", answer);
@@ -89,10 +93,13 @@ public class QuestionController {
 	public String wrongNote(@PathVariable("subject_code") String subject_code, Model model, Principal principal) {
 
 		Long user_no = userService.findUserNoById(principal.getName());
+		//유저가 틀린 문제의 List를 가져옴
 		List<Question> wrongQList = questionService.getWrongQuestionList(user_no, subject_code);
+		//문제에 표시할 과목이름
 		Subject subject = subjectService.getSubjectByCode(subject_code);
-		// 유저 방문 기록
+		// 유저 방문 기록 (최근 학습한 과목 갱신)
 		userService.updateUserHistory(subject_code, user_no);
+		
 		model.addAttribute("subject_name", subject.getSubject_name());
 		model.addAttribute("qList", wrongQList);
 
@@ -104,7 +111,9 @@ public class QuestionController {
 	public String wrongNote(@PathVariable("question_no") Long question_no, Model model, Principal principal) {
 
 		Long user_no = userService.findUserNoById(principal.getName());
+		// 오답노트에서 문제 삭제 후 다시 오답노트 리스트로 돌아가기 위해 필요한 subject_code
 		String subject_code = questionService.getSubjectByQuestion(question_no);
+		// 해당 문제의 정답여부를 '정답'으로 바꿔서 해당 문제가 오답노트에 출력되지 않도록 함
 		questionService.updateWrongNote(user_no, question_no);
 		model.addAttribute("message", "오답노트에서 해당 문제를 삭제하였습니다. 오답노트에서 지운 문제들은 복습하기에서 확인하실 수 있습니다.");
 		model.addAttribute("url", "/question/wrongnote/" + subject_code);
@@ -115,10 +124,13 @@ public class QuestionController {
 	// 정답인 문제들 복습
 	@GetMapping("/review/{subject_code}")
 	public String review(@PathVariable("subject_code") String subject_code, Model model, Principal principal) {
+		
 		Long user_no = userService.findUserNoById(principal.getName());
+		// 유저가 맞힌 문제와 오답노트에서 삭제한 문제의 리스트를 가져옴
 		List<Question> correctQList = questionService.getCorrectQuestionList(user_no, subject_code);
+		//문제에 표시할 과목
 		Subject subject = subjectService.getSubjectByCode(subject_code);
-		// 유저 방문 기록
+		// 유저 방문 기록 (학습 기록 갱신)
 		userService.updateUserHistory(subject_code, user_no);
 		model.addAttribute("subject_name", subject.getSubject_name());
 		model.addAttribute("qList", correctQList);

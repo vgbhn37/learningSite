@@ -94,12 +94,12 @@
 		a.subject_code = #{subject_code}
 	</select>
 	
-	<select id ="getQuestionListBySubject" resultType="hashmap">
+	<select id ="getQuestionListBySubject" resultType="Question">
 		SELECT * 
 		FROM question
 		WHERE subject_code = #{subject_code}
 	</select>
-	<select id="getQuestionListBySubjectWithPage" resultType="hashmap">
+	<select id="getQuestionListBySubjectWithPage" resultType="Question">
 		SELECT * 
 		FROM question
 		WHERE subject_code = #{subject_code}
