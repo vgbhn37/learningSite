@@ -60,8 +60,11 @@
                   <span th:text="${question.user_select}"></span><br />
                 </p>
                 <p>
-                  <span>해설 : </span>
-                  <span th:text="${question.question_explanation}"></span>
+                  <span>해설 : </span><br />
+                  <span
+                    th:text="${question.question_explanation}"
+                    style="white-space: pre-line"
+                  ></span>
                 </p>
 
                 <a

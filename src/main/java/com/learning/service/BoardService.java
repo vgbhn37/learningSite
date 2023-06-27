@@ -35,7 +35,7 @@ public class BoardService {
 	public void writeNotice(Long user_no, BoardForm boardForm) {
 		
 		Board board = new Board();
-
+		
 		board.setBoard_title(boardForm.getBoard_title());
 		board.setBoard_content(boardForm.getBoard_content());
 		board.setUser_no(user_no);

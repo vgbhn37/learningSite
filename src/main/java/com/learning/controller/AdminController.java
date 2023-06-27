@@ -195,9 +195,9 @@ public class AdminController {
 	}
 	
 	//문제 관리 페이지에서 과목 검색후 그에 맞는 과목리스트 출력(LIKE)
-	@GetMapping("/questionSearch")
+	@GetMapping("/searchSub")
 	@PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-	public String question(@RequestParam(value = "search") String search, Model model) {
+	public String searchSub(@RequestParam(value = "search") String search, Model model) {
 		List<Subject> sList = subjectService.getSubjectListBySearch(search);
 		model.addAttribute("sList", sList);
 		return "admin/selectSubject";
@@ -222,6 +222,17 @@ public class AdminController {
 		model.addAttribute("subject", subject);
 		return "admin/questionList";
 	}
+	
+	//문제 관리 페이지에서 문제 검색후 그에 맞는 문제리스트 출력(LIKE)
+		@GetMapping("/searchQuestion/{subject_code}")
+		@PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+		public String searchQuestion(@PathVariable("subject_code")String subject_code, @RequestParam(value = "search") String search, Model model) {
+			List<Question> qList = questionService.getQuestionListByContent(search, subject_code);
+			Subject subject = subjectService.getSubjectByCode(subject_code); 
+			model.addAttribute("qList", qList);
+			model.addAttribute("subject", subject);
+			return "admin/questionList";
+		}
 	
 	//문제 상세보기(수정, 삭제 가능)
 	@PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")

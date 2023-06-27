@@ -30,5 +30,6 @@ public interface QuestionMapper {
 	public void deleteQuestion(Long question_no);
 	public void updateWrongNote(Long user_no, Long question_no);
 	public void initProgress(String subject_code, Long user_no);
+	public List<Question> getQuestionListByContent(String search, String subject_code);
 	
 }

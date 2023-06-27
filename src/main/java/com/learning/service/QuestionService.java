@@ -149,4 +149,8 @@ public class QuestionService {
 	public String getSubjectByQuestion(Long question_no) {
 		return questionMapper.getSubjectByQuestion(question_no);
 	}
+	
+	public List<Question> getQuestionListByContent(String search, String subject_code){
+		return questionMapper.getQuestionListByContent(search, subject_code);
+	}
 }

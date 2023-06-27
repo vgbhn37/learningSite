@@ -126,6 +126,12 @@
 		FROM question
 		WHERE question_no = #{question_no}
 	</select>
+	<select id="getQuestionListByContent" resultType="Question">
+		SELECT * 
+		FROM question
+		WHERE question_content LIKE CONCAT('%',#{search},'%') 
+		AND subject_code = #{subject_code}
+	</select>
 	<update id="updateWrongNote">
 		UPDATE done_question
 		SET correct = 'o' 

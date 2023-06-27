@@ -17,14 +17,14 @@
 
       <br /><br />
 
-      <form th:action="@{/admin/questionSearch}" method="get">
+      <form th:action="@{|/admin/searchQuestion/${subject.subject_code}|}" method="get">
         <div class="row justify-content-end">
           <div class="col-11">
             <input
               type="text"
               class="form-control"
               name="search"
-              placeholder="검색하실 과목명을 입력해주세요."
+              placeholder="검색하실 문제내용을 입력해주세요."
             />
           </div>
           <div class="col-1">
@@ -63,43 +63,45 @@
             </tr>
           </tbody>
         </table>
-        <nav aria-label="Page navigation" th:if="${pmk.endPage > 0}">
-          <ul class="pagination pagination-primary justify-content-center">
-            <li class="page-item" th:if="${pmk.prev}">
-              <a
-                class="page-link"
-                th:href="@{|/admin/questionList/${subject_code}?pageNum=${pmk.startPage-1}}"
-                aria-label="이전"
-              >
-                <span class="material-icons"> keyboard_arrow_left </span>
-                <span class="sr-only">이전</span>
-              </a>
-            </li>
+        <div th:if="${pmk!=null}">
+          <nav aria-label="Page navigation" th:if="${pmk.endPage > 0}">
+            <ul class="pagination pagination-primary justify-content-center">
+              <li class="page-item" th:if="${pmk.prev}">
+                <a
+                  class="page-link"
+                  th:href="@{|/admin/questionList/${subject_code}?pageNum=${pmk.startPage-1}}"
+                  aria-label="이전"
+                >
+                  <span class="material-icons"> keyboard_arrow_left </span>
+                  <span class="sr-only">이전</span>
+                </a>
+              </li>
 
-            <li
-              class="page-item"
-              th:classappend="${pmk.criteria.pageNum == number} ? 'active' : '' "
-              th:each="number : ${#numbers.sequence(pmk.startPage , pmk.endPage)}"
-            >
-              <a
-                class="page-link"
-                th:href="@{|/admin/questionList/${subject_code}?pageNum=${number}}"
-                th:text="${number}"
-              ></a>
-            </li>
-
-            <li class="page-item" th:if="${pmk.next}">
-              <a
-                class="page-link"
-                th:href="@{|/admin/questionList/${subject_code}?pageNum=${pmk.endPage+1}}"
-                aria-label="다음"
+              <li
+                class="page-item"
+                th:classappend="${pmk.criteria.pageNum == number} ? 'active' : '' "
+                th:each="number : ${#numbers.sequence(pmk.startPage , pmk.endPage)}"
               >
-                <span class="material-icons"> keyboard_arrow_right </span>
-                <span class="sr-only">다음</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+                <a
+                  class="page-link"
+                  th:href="@{|/admin/questionList/${subject_code}?pageNum=${number}}"
+                  th:text="${number}"
+                ></a>
+              </li>
+
+              <li class="page-item" th:if="${pmk.next}">
+                <a
+                  class="page-link"
+                  th:href="@{|/admin/questionList/${subject_code}?pageNum=${pmk.endPage+1}}"
+                  aria-label="다음"
+                >
+                  <span class="material-icons"> keyboard_arrow_right </span>
+                  <span class="sr-only">다음</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
     <footer th:replace="layout::footer"></footer>
