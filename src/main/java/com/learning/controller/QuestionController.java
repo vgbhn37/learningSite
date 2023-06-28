@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.learning.domain.Question;
-import com.learning.domain.Subject;
+import com.learning.model.Question;
+import com.learning.model.Subject;
 import com.learning.service.QuestionService;
 import com.learning.service.SubjectService;
 import com.learning.service.UserService;

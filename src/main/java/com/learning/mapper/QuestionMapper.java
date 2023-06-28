@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.learning.domain.Criteria;
-import com.learning.domain.DoneQuestion;
-import com.learning.domain.Question;
+import com.learning.model.Criteria;
+import com.learning.model.DoneQuestion;
+import com.learning.model.Question;
 
 @Mapper
 public interface QuestionMapper {

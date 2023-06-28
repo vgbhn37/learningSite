@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.learning.domain.SiteUser;
 import com.learning.form.UserForm;
+import com.learning.model.SiteUser;
 import com.learning.service.UserService;
 
 @Controller

@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.learning.domain.Criteria;
-import com.learning.domain.SiteUser;
 import com.learning.form.TeacherForm;
 import com.learning.form.UserForm;
 import com.learning.mapper.UserMapper;
+import com.learning.model.Criteria;
+import com.learning.model.SiteUser;
 
 @Service
 public class UserService {

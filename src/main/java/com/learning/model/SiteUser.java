@@ -1,4 +1,4 @@
-package com.learning.domain;
+package com.learning.model;
 
 
 import lombok.AllArgsConstructor;

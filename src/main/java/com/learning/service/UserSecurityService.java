@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.learning.UserRole;
-import com.learning.domain.SiteUser;
+import com.learning.model.SiteUser;
 
 
 @Service

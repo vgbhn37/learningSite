@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.learning.domain.Board;
-import com.learning.domain.Criteria;
 import com.learning.form.BoardForm;
 import com.learning.mapper.BoardMapper;
+import com.learning.model.Board;
+import com.learning.model.Criteria;
 
 @Service
 public class BoardService {

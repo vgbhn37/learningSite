@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.learning.domain.Criteria;
-import com.learning.domain.DoneQuestion;
-import com.learning.domain.Question;
 import com.learning.form.QuestionForm;
 import com.learning.mapper.QuestionMapper;
+import com.learning.model.Criteria;
+import com.learning.model.DoneQuestion;
+import com.learning.model.Question;
 
 @Service
 public class QuestionService {

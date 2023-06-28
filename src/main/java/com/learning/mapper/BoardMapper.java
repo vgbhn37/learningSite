@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.learning.domain.Board;
-import com.learning.domain.Criteria;
+import com.learning.model.Board;
+import com.learning.model.Criteria;
 
 @Mapper
 public interface BoardMapper {

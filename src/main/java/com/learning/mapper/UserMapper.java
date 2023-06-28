@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.learning.domain.Criteria;
-import com.learning.domain.SiteUser;
+import com.learning.model.Criteria;
+import com.learning.model.SiteUser;
 
 @Mapper
 public interface UserMapper {

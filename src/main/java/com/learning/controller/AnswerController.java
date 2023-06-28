@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.learning.domain.Answer;
-import com.learning.domain.Board;
-import com.learning.domain.Question;
 import com.learning.form.AnswerForm;
+import com.learning.model.Answer;
+import com.learning.model.Board;
+import com.learning.model.Question;
 import com.learning.service.AnswerService;
 import com.learning.service.BoardService;
 import com.learning.service.QuestionService;

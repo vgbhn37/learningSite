@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.learning.domain.Subject;
 import com.learning.form.SubjectForm;
 import com.learning.mapper.SubjectMapper;
+import com.learning.model.Subject;
 
 @Service
 public class SubjectService {

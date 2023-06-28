@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.learning.domain.Subject;
+import com.learning.model.Subject;
 
 @Mapper
 public interface SubjectMapper {

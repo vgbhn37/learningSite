@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.learning.domain.Board;
+import com.learning.model.Board;
 import com.learning.service.BoardService;
 import com.learning.service.UserService;
 
